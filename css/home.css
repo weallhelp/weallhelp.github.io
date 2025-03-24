@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 90vh;
+    max-height: 90vh;
+    background-color: #FFFFFF;
+    font-style: italic;
+    font-size: 20px;
+    color: #ba0909;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+main {
+    flex: 10;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+#LogoLink img {
+    max-width: 100%;
+    height: auto;
+}
+
+.dark-text, .dark-text:visited {
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: #333333;
+    text-decoration: none; /* Ensures no underline for these links */
+    position: absolute;
+    bottom: 150px; /* Adjusts position of the text */
+}
+
+.page-content {
+    font-style: normal; /* Normal font style */
+    font-size: 16px; /* Default font size */
+    color: #000000; /* Black text color */
+    text-align: justify; /* Justified text alignment */
+}
