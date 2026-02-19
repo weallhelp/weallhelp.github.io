@@ -1,6 +1,5 @@
 // Declare global variables
 let counter;
-let link_list;
 let randomURL;
 
 async function countClicks() {
@@ -17,39 +16,28 @@ async function countClicks() {
 
     // Save the updated counter value in local storage
     localStorage.setItem('counter', counter);
-}
-
-async function setLinkList() {
-    // Fetch the counter value
-    await countClicks();
-
-    // Use relative path for GitHub Pages
-    // This will work both locally and on GitHub Pages
-    link_list = 'links/links.txt';
-    
-    // For debugging, uncomment the line below to see what path is being used
-    // console.log('Loading links from:', window.location.origin + '/' + link_list);
+    console.log('Counter:', counter); // For debugging
 }
 
 async function getRandomURL() {
-    // Fetch the link list
-    await setLinkList();
-
     try {
-        // Add cache-busting parameter to avoid cached empty files
+        // Add cache-busting parameter
         const cacheBuster = '?v=' + new Date().getTime();
-        const response = await fetch(link_list + cacheBuster);
+        const response = await fetch('../links/links.txt' + cacheBuster);
 
         if (!response.ok) {
             throw new Error(`Failed to load links.txt (Status: ${response.status})`);
         }
 
         const data = await response.text();
+        console.log('Raw data:', data); // For debugging
         
-        // Split by newlines, filter out empty lines and comments
+        // Split by newlines and filter out empty lines
         const urlsArray = data.split('\n')
             .map(line => line.trim())
             .filter(line => line.length > 0 && !line.startsWith('#'));
+
+        console.log('URLs found:', urlsArray); // For debugging
 
         if (urlsArray.length === 0) {
             throw new Error('No valid URLs found in links.txt');
@@ -58,14 +46,14 @@ async function getRandomURL() {
         // Select a random URL
         const randomIndex = Math.floor(Math.random() * urlsArray.length);
         randomURL = urlsArray[randomIndex];
+        console.log('Selected URL:', randomURL); // For debugging
 
     } catch (error) {
-        // Display user-friendly error
+        console.error('Error:', error);
         document.getElementById("mainContainer").innerHTML = `
             <div style="padding: 20px; text-align: center;">
                 <h3>Unable to load links</h3>
-                <p>Please check that links.txt exists and contains URLs.</p>
-                <p style="font-size: 12px; color: #666;">${error.message}</p>
+                <p>Error: ${error.message}</p>
                 <button onclick="window.location.href='/'">Go Home</button>
             </div>
         `;
@@ -74,16 +62,28 @@ async function getRandomURL() {
 }
 
 async function displayRandomURL() {
-    // Fetch the random URL
+    // First update the counter
+    await countClicks();
+    
+    // Then get a random URL
     await getRandomURL();
 
     if (randomURL) {
-        // Small delay to ensure tracking scripts load
+        // Update the page to show redirecting message
+        document.getElementById("mainContainer").innerHTML = `
+            <div style="text-align: center; padding: 50px;">
+                <h2>Redirecting you to:</h2>
+                <p style="color: #666; word-break: break-all;">${randomURL}</p>
+                <p>Please wait...</p>
+            </div>
+        `;
+        
+        // Redirect after a short delay
         setTimeout(() => {
             window.location.href = randomURL;
-        }, 100);
+        }, 1500);
     }
 }
 
-// Call the displayRandomURL function
+// Call the function when the page loads
 displayRandomURL();
