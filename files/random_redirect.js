@@ -25,9 +25,9 @@ async function setLinkList() {
 
     // Determine the link list based on the counter value
     if (counter === 3) {
-        link_list = 'links/links.txt';
+        link_list = 'https://WeAll.Help/links/links.txt';
     } else {
-        link_list = 'links/links.txt';
+        link_list = 'https://WeAll.Help/links/links.txt';
     }
 }
 
