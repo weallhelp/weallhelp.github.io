@@ -10,7 +10,7 @@ async function countClicks() {
     // Increment the counter each time the page is visited
     counter++;
 
-    // After counter reaches 10, reset it to 1 (to show an ad link every 10 visits)
+    // After counter reaches 10, reset it to 1
     if (counter > 10) {
         counter = 1;
     }
@@ -23,12 +23,12 @@ async function setLinkList() {
     // Fetch the counter value
     await countClicks();
 
-    // Determine the link list based on the counter value
-    if (counter === 3) {
-        link_list = 'https://WeAll.Help/links/links.txt';
-    } else {
-        link_list = 'https://WeAll.Help/links/links.txt';
-    }
+    // Use relative path for GitHub Pages
+    // This will work both locally and on GitHub Pages
+    link_list = 'links/links.txt';
+    
+    // For debugging, uncomment the line below to see what path is being used
+    // console.log('Loading links from:', window.location.origin + '/' + link_list);
 }
 
 async function getRandomURL() {
@@ -36,25 +36,39 @@ async function getRandomURL() {
     await setLinkList();
 
     try {
-        const response = await fetch(link_list);
+        // Add cache-busting parameter to avoid cached empty files
+        const cacheBuster = '?v=' + new Date().getTime();
+        const response = await fetch(link_list + cacheBuster);
 
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.status} ${link_list}`);
+            throw new Error(`Failed to load links.txt (Status: ${response.status})`);
         }
 
         const data = await response.text();
+        
+        // Split by newlines, filter out empty lines and comments
+        const urlsArray = data.split('\n')
+            .map(line => line.trim())
+            .filter(line => line.length > 0 && !line.startsWith('#'));
 
-        // Select a random URL from the link_list
-        const urlsArray = data.trim().split('\n').map(url => url.trim());
+        if (urlsArray.length === 0) {
+            throw new Error('No valid URLs found in links.txt');
+        }
+
+        // Select a random URL
         const randomIndex = Math.floor(Math.random() * urlsArray.length);
+        randomURL = urlsArray[randomIndex];
 
-        // Set the randomURL value
-        randomURL = urlsArray[randomIndex].toString();
     } catch (error) {
-        // Display the error in the mainContainer element
-        document.getElementById("mainContainer").innerHTML = `Error: ${error.message}`;
-
-        // Reset the randomURL value
+        // Display user-friendly error
+        document.getElementById("mainContainer").innerHTML = `
+            <div style="padding: 20px; text-align: center;">
+                <h3>Unable to load links</h3>
+                <p>Please check that links.txt exists and contains URLs.</p>
+                <p style="font-size: 12px; color: #666;">${error.message}</p>
+                <button onclick="window.location.href='/'">Go Home</button>
+            </div>
+        `;
         randomURL = null;
     }
 }
@@ -64,14 +78,11 @@ async function displayRandomURL() {
     await getRandomURL();
 
     if (randomURL) {
-        // Redirect to randomURL
-        window.location.href = randomURL;
+        // Small delay to ensure tracking scripts load
+        setTimeout(() => {
+            window.location.href = randomURL;
+        }, 100);
     }
-
-    // if (randomURL) {
-    //     // Display the counter, link list, and random URL
-    //     document.getElementById("mainContainer").innerHTML = `Click Count: ${counter}<br>Link List: ${link_list}<br>Random URL: ${randomURL}`;
-    // }
 }
 
 // Call the displayRandomURL function
