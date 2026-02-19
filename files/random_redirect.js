@@ -25,9 +25,9 @@ async function setLinkList() {
 
     // Determine the link list based on the counter value
     if (counter === 3) {
-        link_list = 'https://GiveUs.Help/links/giveushelp_links.txt';
+        link_list = 'links/links.txt';
     } else {
-        link_list = 'https://GiveUs.Help/links/giveushelp_links.txt';
+        link_list = 'links/links.txt';
     }
 }
 
