@@ -9,38 +9,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-27WK7L7741"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-27WK7L7741');
     </script>
-    <style>
-        #mainContainer {
-            cursor: pointer;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #mainContainer img {
-            max-width: 80%;
-            height: auto;
-        }
-    </style>
 </head>
-<body scroll="no" style="overflow: hidden">
-    <main id="mainContainer">
-        <img src="image/weallhelp_logo.png" alt="We All Help" style="cursor: pointer;">
-    </main>
 
-    <div class="w3-container w3-bottom w3-center">
-        <a href="help.html" target="_blank">Give or Get Help<br></a>
-        &copy; 2026
-    </div>
+<body style="overflow:hidden">
 
-    <script src="files/open_redirect_page.js"></script>
+<main id="mainContainer" style="display:flex;justify-content:center;align-items:center;height:100vh;">
+    <img id="logo" src="image/weallhelp_logo.png" alt="We All Help" style="cursor:pointer;">
+</main>
+
+<div class="w3-container w3-bottom w3-center">
+    <a href="help.html" target="_blank">Give or Get Help<br></a>
+    &copy; 2026
+</div>
+
+<script>
+document.getElementById("logo").addEventListener("click", async function () {
+
+    const container = document.getElementById("mainContainer");
+
+    // Show loading message immediately
+    container.innerHTML = `
+        <div style="text-align:center;">
+            <h2>Redirecting . . .</h2>
+        </div>
+    `;
+
+    try {
+        const response = await fetch("links/links.txt", { cache: "no-store" });
+
+        if (!response.ok) {
+            throw new Error("Could not load links.txt");
+        }
+
+        const text = await response.text();
+
+        const urls = text
+            .split("\n")
+            .map(url => url.trim())
+            .filter(url => url.length > 0);
+
+        if (urls.length === 0) {
+            throw new Error("No URLs found in links.txt");
+        }
+
+        const randomIndex = Math.floor(Math.random() * urls.length);
+        const randomURL = urls[randomIndex];
+
+        // Small delay so user sees loading message
+        setTimeout(() => {
+            window.location.href = randomURL;
+        }, 700);
+
+    } catch (error) {
+        container.innerHTML =
+            "<p style='color:red;text-align:center;'>Error: " + error.message + "</p>";
+    }
+
+});
+</script>
+
 </body>
 </html>
