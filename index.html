@@ -7,8 +7,10 @@
     <meta name="keywords" content="crowdfunding, marketing, promotion, weallhelp">
     <meta name="author" content="WeAll.Help">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-27WK7L7741"></script>
     <script>
@@ -17,10 +19,34 @@
         gtag('js', new Date());
         gtag('config', 'G-27WK7L7741');
     </script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #mainContainer {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .w3-bottom {
+            z-index: 1;
+        }
+    </style>
 </head>
-<body scroll="no" style="overflow: hidden">
+
+<body>
+
     <main id="mainContainer">
-        <a href="#" id="LogoLink"><img src="image/weallhelp_logo.png" alt="We All Help"></a>
+        <a href="#" id="LogoLink">
+            <img src="image/weallhelp_logo.png" alt="We All Help">
+        </a>
     </main>
 
     <div class="w3-container w3-bottom w3-center">
@@ -29,5 +55,6 @@
     </div>
 
     <script src="files/open_redirect_page.js"></script>
+
 </body>
 </html>
